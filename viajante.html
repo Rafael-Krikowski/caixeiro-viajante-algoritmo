@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="app.js" defer></script>
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        .espacamento {
+            padding: 3px;
+        }
+
+        .borda {
+            border: 1px solid black;
+        }
+
+        .botao {
+            width: 80px;
+            height: 25px;
+        }
+
+        .botao-selecionado {
+            color: blue;
+            border-style: solid;
+            border-color: blue;
+        }
+
+        .janela {
+            height: calc(100vh - 40px);
+            position: relative;
+        }
+
+        .botao-calcular {
+            margin-left: 50px;
+            background-color: rgb(81, 81, 250);
+            color: white;
+            border: none;
+            border-radius: 2px;
+        }
+
+        .botao-calcular:hover {
+            background-color: rgb(108, 108, 234);
+        }
+
+        .nucleo {
+            width: 20px;
+            height: 20px;
+            font-size: 0.7em;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .nucleo-selecionado {
+            background-color: rgb(137, 137, 255);
+            border-color: rgb(88, 88, 251);
+            color: white;
+        }
+
+        .linha, .input, .traco {
+            position: absolute;
+        }
+
+        .linha {
+            z-index: -1;
+        }
+
+        .input {
+            width: 30px;
+            text-align: center;
+        }
+
+        .ocultar {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container borda">
+        <div id="menu" class="espacamento borda">
+            <button id="adicionar" class="botao botao-selecionado">Adicionar</button>
+            <button id="conectar" class="botao">Conectar</button>
+            <button id="remover" class="botao">Remover</button>
+            <button id="limpar" class="botao">Limpar</button>
+            <button id="calcular" class="botao botao-calcular">Calcular</button>
+        </div>
+
+        <div id="janela" class="borda janela">
+            <div id="nucleo" class="nucleo borda ocultar">
+                <span>111</span>
+            </div>
+
+            <div>
+                <svg id="linha" class="linha ocultar"><line x1="120" y1="250" x2="350" y2="30" style="stroke: rgb(0,0,0); stroke-width: 1px"></svg>
+                <input id="input" type="text" placeholder="000" class="input ocultar" style="top: 90px; left: 50px;">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
