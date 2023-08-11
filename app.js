@@ -288,12 +288,97 @@ class GerenteDeInputs {
 
 class Calculo {
     constructor(){
-        this.qtdeDeNucleos = 0
+        this.nucleos = []
+        this.array = []
+        this.indice = 0
+        this.arraySoma = [-1]
+        this.gerenteNucleo = null
     }
 
-    pegarQtdeNucleos(valor){
-        this.qtdeDeNucleos = valor
-        console.log(this.qtdeDeNucleos)
+    pegarGerenteDeNucleo(elemento){
+        this.gerenteNucleo = elemento.colecaoDeNucleos
+    }
+
+    pegarIdDosNucleos(elemento){
+        for(let i in elemento){
+            this.nucleos.push(i)
+        }
+    }
+
+    numeroCombinacoes(nucleos){
+        let fatorial = 1
+
+        for(let i = 1; i <= nucleos.length; i++){
+            fatorial *= i
+        }
+
+        return fatorial
+    }
+
+    gerarArrayCombinacoes(){
+        this.array = new Array(this.numeroCombinacoes(this.nucleos) / this.nucleos.length)
+
+        for(let i = 0; i < this.array.length; i++){
+            this.array[i] = new Array(this.nucleos.length + 1)
+
+            for(let j = 0; j < this.array[i].length; j++){
+                this.array[i][j] = 'n1'
+            }
+        }
+    }
+
+    popularArray(){
+        for(let i = 0; i < this.nucleos.length; i++){
+            for(let j = 0; j < this.numeroCombinacoes(this.nucleos) / this.nucleos.length; j++){
+                this.array[j][i] = this.definirNucleo(i, j)
+            }
+
+            this.indice = 0
+        }
+    }
+
+    definirNucleo(coluna, linha){
+        let nucleosUsados = []
+        let nucleosResultantes = []
+        let indiceDetroca = 0
+
+        for(let i = 0; i < coluna; i++){
+            nucleosUsados[this.nucleos.indexOf(this.array[linha][i])] = this.array[linha][i]
+        }
+
+        nucleosResultantes = this.nucleos.filter((n, indice, array) => {
+            return this.nucleos[indice] != nucleosUsados[indice]
+        })
+
+        indiceDetroca = this.numeroCombinacoes(nucleosResultantes) / nucleosResultantes.length
+
+        if(linha % (indiceDetroca) == 0 && linha != 0){
+            this.indice++
+            
+            if(this.indice >= nucleosResultantes.length){
+                this.indice = 0
+            }
+        }
+
+        return nucleosResultantes[this.indice]
+    }
+
+    incluirDistancias(n, r){
+        return parseInt(this.gerenteNucleo[n].relacionamento[r])
+    }
+
+    somarDistancias(){
+        for(let i = 0; i < this.numeroCombinacoes(this.nucleos) / this.nucleos.length; i++){
+            for(let j = 0; j < this.nucleos.length; j++){
+                this.arraySoma[i] += this.incluirDistancias(this.array[i][j], `${this.array[i][j]}${this.array[i][j + 1]}`)
+            }
+        }
+    }
+
+    popularArraySoma(){
+        for(let i = 0; i < this.numeroCombinacoes(this.nucleos) / this.nucleos.length; i++){
+            this.arraySoma[i] = -1
+        }
     }
 }
 
@@ -308,6 +393,7 @@ conexao.incluirObservador(gerenteDeInputs)
 conexao.incluiObservadorInput(gerenteDeInputs)
 gerenteDeInputs.incluirNucleo(gerenteDeNucleos)
 gerenteDeNucleos.incluirCalculo(calculo)
+calculo.pegarGerenteDeNucleo(gerenteDeNucleos)
 
 elementosDaTela.elementoJanela().addEventListener('mouseup', event => {
     const mouseX = event.clientX
@@ -336,15 +422,14 @@ elementosDaTela.elementoJanela().addEventListener('mouseup', event => {
 elementosDaTela.elemetoMenu().addEventListener('mouseup', e => {
     botaoSelecionado.selecionado(e.target.id)
     if(e.target.id === 'calcular'){
-        gerenteDeNucleos.informarQtdeNucleos()
         botaoSelecionado.selecionado('adicionar')
+        calculo.pegarIdDosNucleos(gerenteDeNucleos.colecaoDeNucleos)
+        calculo.gerarArrayCombinacoes()
+        calculo.popularArray()
+        calculo.popularArraySoma()
+        calculo.somarDistancias()
+
+        console.log(calculo.array)
+        console.log(calculo.arraySoma)
     }
 })
-
-
-
-
-
-
-
-        
